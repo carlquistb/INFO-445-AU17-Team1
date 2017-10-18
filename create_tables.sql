@@ -7,13 +7,13 @@ description: This script will create BookPromotions and its tables.
 
 /******************create database************************/
 use master
-if exists (select name from sysdatabases where name='BookPromotionsDB')
-	drop database BookPromotionsDB
+if exists (select name from sysdatabases where name='g1_BookPromotionsDB')
+	drop database g1_BookPromotionsDB
 go
-create database BookPromotionsDB
+create database g1_BookPromotionsDB
 go
 
-USE BookPromotionsDB
+USE g1_BookPromotionsDB
 GO
 
 /******************Editions table**********************/

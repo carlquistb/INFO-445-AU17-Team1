@@ -184,13 +184,24 @@ CREATE TABLE Locations (
 	);
 
 CREATE TABLE BookLocation (
-	BookRetailerLocationID int IDENTITY(1,1) NOT NULL,
+	BookLocationID int IDENTITY(1,1) NOT NULL,
 	BookID int NOT NULL,
 	LocationID int NOT NULL
 
-	CONSTRAINT pk_BookLocation PRIMARY KEY (BookRetailerLocationID),
+	CONSTRAINT pk_BookLocation PRIMARY KEY (BookLocationID),
 	CONSTRAINT fk_BookLocation_Books FOREIGN KEY (BookID) REFERENCES Books (BookID),
 	CONSTRAINT fk_BookLocation_Location FOREIGN KEY (LocationID) REFERENCES Locations (LocationID)
+	);
+
+CREATE TABLE DailySalesData (
+	DailySalesID int IDENTITY(1,1) NOT NULL,
+	BookLocationID int NOT NULL,
+	UnitsSold int NOT NULL,
+	DollarsSold money NOT NULL,
+	UtcDate date NOT NULL
+
+	CONSTRAINT pk_DailySalesData PRIMARY KEY (DailySalesID),
+	CONSTRAINT fk_DailySalesData_BookLocation FOREIGN KEY (BookLocationID) REFERENCES BookLocation (BookLocationID)
 	);
 
 CREATE TABLE Promos (

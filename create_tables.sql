@@ -16,8 +16,8 @@ go
 USE BookPromotionsDB
 GO
 
-/******************tblEditions table**********************/
-create table tblEditions (
+/******************Editions table**********************/
+create table Editions (
 	EditionID int
 		primary key
 		identity(1,1)
@@ -26,8 +26,8 @@ create table tblEditions (
 		not null,
 	EditionDescription nvarchar(500)
 )
-/******************tblFormats table***********************/
-create table tblFormats (
+/******************Formats table***********************/
+create table Formats (
 	FormatID int
 		primary key
 		identity(1,1)
@@ -36,8 +36,8 @@ create table tblFormats (
 		not null,
 	FormatDescription nvarchar(500)
 )
-/******************tblBooks table*************************/
-create table tblBooks (
+/******************Books table*************************/
+create table Books (
 	BookID int
 		primary key
 		identity(1,1)
@@ -46,8 +46,8 @@ create table tblBooks (
 		not null,
 	BookDescription nvarchar(500)
 )
-/******************tblReleaseDays table*******************/
-create table tblReleaseDays (
+/******************ReleaseDays table*******************/
+create table ReleaseDays (
 	ReleaseDayID int
 		primary key
 		identity(1,1)
@@ -57,18 +57,18 @@ create table tblReleaseDays (
 	ReleaseDayBookID int
 		not null
 		foreign key
-			references tblBooks(BookID),
+			references Books(BookID),
 	ReleaseDayEditionID int
 		not null
 		foreign key
-			references tblEditions(EditionID),
+			references Editions(EditionID),
 	ReleaseDayFormatID int
 		not null
 		foreign key
-			references  tblFormats(FormatID)
+			references  Formats(FormatID)
 )
-/******************tblSeries table************************/
-create table tblSeries (
+/******************Series table************************/
+create table Series (
 	SeriesID int
 		primary key
 		identity(1,1)
@@ -77,23 +77,23 @@ create table tblSeries (
 		not null,
 	SeriesDescription nvarchar(500)
 )
-/******************tblBooksSeries table******************/
-create table tblBooksSeries (
+/******************BooksSeries table******************/
+create table BooksSeries (
 	BooksSeriesID int
 		primary key
 		identity(1,1)
 		not null,
 	BookID int
 		foreign key
-			references tblBooks(Bookid)
+			references Books(Bookid)
 		not null,
 	SeriesID int
 		foreign key
-			references tblSeries(SeriesID)
+			references Series(SeriesID)
 		not null
 )
-/******************tblAuthors table***********************/
-create table tblAuthors (
+/******************Authors table***********************/
+create table Authors (
 	AuthorID int
 		primary key
 		identity(1,1)
@@ -104,23 +104,23 @@ create table tblAuthors (
 		not null,
 	AuthorDOB date
 )
-/******************tblBooksAuthors table******************/
-create table tblBooksAuthors (
+/******************BooksAuthors table******************/
+create table BooksAuthors (
 	BooksAuthorID int
 		primary key
 		identity(1,1)
 		not null,
 	BookID int
 		foreign key
-			references tblBooks(BookID)
+			references Books(BookID)
 		not null,
 	AuthorID int
 		foreign key
-			references tblAuthors(AuthorID)
+			references Authors(AuthorID)
 		not null
 )
-/******************tblGenres table************************/
-create table tblGenres (
+/******************Genres table************************/
+create table Genres (
 	GenreID int
 		primary key
 		identity(1,1)
@@ -129,106 +129,116 @@ create table tblGenres (
 		not null,
 	GenreDescription nvarchar(500)
 )
-/******************tblGenresBooks table*******************/
-create table tblGenresBooks (
+/******************GenresBooks table*******************/
+create table GenresBooks (
 	GenreBookID int
 		primary key
 		identity(1,1)
 		not null,
 	GenreID int
 		foreign key
-			references tblGenres(GenreID)
+			references Genres(GenreID)
 		not null,
 	BookID int
 		foreign key
-			references tblBooks(BookID)
+			references Books(BookID)
 		not null
 )
 
-CREATE TABLE tblStates (
-	StateID int IDENTITY(1,1),
-	StateAbbreviation varchar(5),
-	StateName varchar(100)
+CREATE TABLE States (
+	StateID int IDENTITY(1,1) NOT NULL,
+	StateAbbreviation varchar(5) NOT NULL,
+	StateName varchar(100) NOT NULL
 
 	CONSTRAINT pk_States PRIMARY KEY (StateID)
 	);
 
-CREATE TABLE tblCities (
-	CityID int IDENTITY(1,1),
-	CityName varchar(100),
-	StateID int
+CREATE TABLE Cities (
+	CityID int IDENTITY(1,1) NOT NULL,
+	CityName varchar(100) NOT NULL,
+	StateID int NOT NULL
 
 	CONSTRAINT pk_Cities PRIMARY KEY (CityID),
-	CONSTRAINT fk_Cities_States FOREIGN KEY (StateID) REFERENCES tblStates (StateID)
+	CONSTRAINT fk_Cities_States FOREIGN KEY (StateID) REFERENCES States (StateID)
 	);
 
-CREATE TABLE tblRetailers (
-	RetailerID int IDENTITY(1,1),
-	RetailerName varchar(100),
-	RetailerDesc varchar(250)
+CREATE TABLE Retailers (
+	RetailerID int IDENTITY(1,1) NOT NULL,
+	RetailerName varchar(100) NOT NULL,
+	RetailerDesc varchar(250) NOT NULL
 
 	CONSTRAINT pk_Retailers PRIMARY KEY (RetailerID)
 	);
 
-CREATE TABLE tblLocations (
-	LocationID int IDENTITY(1,1),
-	LocationName varchar(100),
-	StreetAddress varchar(100),
-	CityID int,
-	ZipCode varchar(10),
-	RetailerID int
+CREATE TABLE Locations (
+	LocationID int IDENTITY(1,1) NOT NULL,
+	LocationName varchar(100) NOT NULL,
+	StreetAddress varchar(100) NOT NULL,
+	CityID int NOT NULL,
+	ZipCode varchar(10) NOT NULL,
+	RetailerID int NOT NULL
 
 	CONSTRAINT pk_Locations PRIMARY KEY (LocationID),
-	CONSTRAINT fk_Locations_Cities FOREIGN KEY (CityID) REFERENCES tblCities (CityID),
-	CONSTRAINT fk_Locations_Retailers FOREIGN KEY (RetailerID) REFERENCES tblRetailers (RetailerID)
+	CONSTRAINT fk_Locations_Cities FOREIGN KEY (CityID) REFERENCES Cities (CityID),
+	CONSTRAINT fk_Locations_Retailers FOREIGN KEY (RetailerID) REFERENCES Retailers (RetailerID)
 	);
 
-CREATE TABLE tblBookLocation (
-	BookRetailerLocationID int IDENTITY(1,1),
-	BookID int,
-	LocationID int
+CREATE TABLE BookLocation (
+	BookRetailerLocationID int IDENTITY(1,1) NOT NULL,
+	BookID int NOT NULL,
+	LocationID int NOT NULL
 
 	CONSTRAINT pk_BookLocation PRIMARY KEY (BookRetailerLocationID),
-	CONSTRAINT fk_BookLocation_Books FOREIGN KEY (BookID) REFERENCES tblBooks (BookID),
-	CONSTRAINT fk_BookLocation_Location FOREIGN KEY (LocationID) REFERENCES tblLocations (LocationID)
+	CONSTRAINT fk_BookLocation_Books FOREIGN KEY (BookID) REFERENCES Books (BookID),
+	CONSTRAINT fk_BookLocation_Location FOREIGN KEY (LocationID) REFERENCES Locations (LocationID)
 	);
 
-CREATE TABLE tblPromos (
-	PromoID int IDENTITY(1,1),
-	PromoName varchar(150),
-	PromoBudget money,
-	PromoDesc varchar(250),
-	PromoStartDate date,
-	PromoEndDate date
+CREATE TABLE Promos (
+	PromoID int IDENTITY(1,1) NOT NULL,
+	PromoName varchar(150) NOT NULL,
+	PromoBudget money NOT NULL,
+	PromoDesc varchar(250) NOT NULL,
+	PromoStartDate date NOT NULL,
+	PromoEndDate date NOT NULL
 
 	CONSTRAINT pk_Promos PRIMARY KEY (PromoID)
 	);
 
-CREATE TABLE tblBookPromos (
-	BookPromoID int IDENTITY(1,1),
-	BookID int,
-	PromoID int
+CREATE TABLE BookPromos (
+	BookPromoID int IDENTITY(1,1) NOT NULL,
+	BookID int NOT NULL,
+	PromoID int NOT NULL
 
 	CONSTRAINT pk_BookPromos PRIMARY KEY (BookPromoID),
-	CONSTRAINT fk_BookPromos_Books FOREIGN KEY (BookID) REFERENCES tblBooks (BookID),
-	CONSTRAINT fk_BookPromos_Promos FOREIGN KEY (PromoID) REFERENCES tblPromos (PromoID)
+	CONSTRAINT fk_BookPromos_Books FOREIGN KEY (BookID) REFERENCES Books (BookID),
+	CONSTRAINT fk_BookPromos_Promos FOREIGN KEY (PromoID) REFERENCES Promos (PromoID)
 	);
 
-CREATE TABLE tblCategories (
-	CategoryID int IDENTITY(1,1),
-	CategoryName varchar(100),
-	CategoryDesc varchar(250)
+CREATE TABLE Expense (
+	ExpenseID int IDENTITY(1,1) NOT NULL,
+	ExpenseName varchar(100) NOT NULL,
+	ExpenseDesc varchar(250) NOT NULL,
+	BookPromoID int  NOT NULL
+
+	CONSTRAINT pk_Expense PRIMARY KEY (ExpenseID),
+	CONSTRAINT fk_Expense_BookPromo FOREIGN KEY (BookPromoID) REFERENCES BookPromos (BookPromoID)
+	);
+
+CREATE TABLE Categories (
+	CategoryID int IDENTITY(1,1) NOT NULL,
+	CategoryName varchar(100) NOT NULL,
+	CategoryDesc varchar(250) NOT NULL
 
 	CONSTRAINT pk_CategoryID PRIMARY KEY (CategoryID)
 	);
 
-CREATE TABLE tblPromoCategories (
-	PromoCategoryID int IDENTITY(1,1),
-	PromoID int,
-	CategoryID int
+CREATE TABLE PromoCategories (
+	PromoCategoryID int IDENTITY(1,1) NOT NULL,
+	PromoID int NOT NULL,
+	CategoryID int NOT NULL
 
 	CONSTRAINT pk_PromoCategories PRIMARY KEY (PromoCategoryID),
-	CONSTRAINT fk_PromoCategories_Promo FOREIGN KEY (PromoID) REFERENCES tblPromos (PromoID),
-	CONSTRAINT fk_PromoCategories_Categories FOREIGN KEY (CategoryID) REFERENCES tblCategories (CategoryID)
+	CONSTRAINT fk_PromoCategories_Promo FOREIGN KEY (PromoID) REFERENCES Promos (PromoID),
+	CONSTRAINT fk_PromoCategories_Categories FOREIGN KEY (CategoryID) REFERENCES Categories (CategoryID)
 	);
 

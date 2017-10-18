@@ -16,86 +16,90 @@ go
 USE g1_BookPromotionsDB
 GO
 
-/******************Editions table**********************/
+/******************Editions table*************************/
 create table Editions (
 	EditionID int
-		primary key
 		identity(1,1)
 		not null,
 	EditionName nvarchar(100)
 		not null,
 	EditionDescription nvarchar(500)
+
+	constraint pk_Editions primary key (EditionID)
 )
-/******************Formats table***********************/
+/******************Formats table**************************/
 create table Formats (
 	FormatID int
-		primary key
 		identity(1,1)
 		not null,
 	FormatName nvarchar(100)
 		not null,
 	FormatDescription nvarchar(500)
+
+	constraint pk_Formats primary key (FormatID)
 )
-/******************Books table*************************/
+/******************Books table****************************/
 create table Books (
 	BookID int
-		primary key
 		identity(1,1)
 		not null,
 	BookTitle nvarchar(100)
 		not null,
 	BookDescription nvarchar(500)
+
+	constraint pk_Books primary key (BookID)
 )
-/******************ReleaseDays table*******************/
+/******************ReleaseDays table**********************/
 create table ReleaseDays (
 	ReleaseDayID int
-		primary key
 		identity(1,1)
 		not null,
 	ReleaseDayDate date
 		not null,
-	ReleaseDayBookID int
-		not null
-		foreign key
-			references Books(BookID),
-	ReleaseDayEditionID int
+	BookID int
+		not null,
+	EditionID int
 		not null
 		foreign key
 			references Editions(EditionID),
-	ReleaseDayFormatID int
+	FormatID int
 		not null
 		foreign key
 			references  Formats(FormatID)
+
+	constraint pk_ReleaseDays primary key (ReleaseDayID),
+	constraint fk_ReleaseDays_Books foreign key (BookID) references Books (BookID),
+	constraint fk_ReleaseDays_Editions foreign key (EditionID) references Editions (EditionID),
+	constraint fk_ReleaseDays_Formats foreign key (FormatID) references Formats (FormatID)
 )
-/******************Series table************************/
+/******************Series table***************************/
 create table Series (
 	SeriesID int
-		primary key
 		identity(1,1)
 		not null,
 	SeriesName nvarchar(100)
 		not null,
 	SeriesDescription nvarchar(500)
+
+	constraint pk_Series primary key (SeriesID)
 )
 /******************BooksSeries table******************/
 create table BooksSeries (
 	BooksSeriesID int
-		primary key
 		identity(1,1)
 		not null,
 	BookID int
-		foreign key
-			references Books(Bookid)
 		not null,
 	SeriesID int
-		foreign key
-			references Series(SeriesID)
 		not null
+
+	constraint pk_BooksSeries primary key (BooksSeriesID),
+	constraint fk_BooksSeries_Books foreign key (BookID) references Books(BookID),
+	constraint fk_BooksSeries_Series foreign key (SeriesID) references Series(SeriesID)
 )
 /******************Authors table***********************/
 create table Authors (
 	AuthorID int
-		primary key
 		identity(1,1)
 		not null,
 	AuthorFirstName nvarchar(100)
@@ -103,52 +107,57 @@ create table Authors (
 	AuthorLastName nvarchar(100)
 		not null,
 	AuthorDOB date
+
+	constraint pk_Authors primary key (AuthorID)
 )
 /******************BooksAuthors table******************/
 create table BooksAuthors (
 	BooksAuthorID int
-		primary key
 		identity(1,1)
 		not null,
 	BookID int
-		foreign key
-			references Books(BookID)
 		not null,
 	AuthorID int
-		foreign key
-			references Authors(AuthorID)
 		not null
+
+	constraint pk_BooksAuthors primary key (BooksAuthorID),
+	constraint fk_BooksAuthors_Books foreign key (BookID) references Books(BookID),
+	constraint fk_BooksAuthors_Authors foreign key (AuthorID) references Authors(AuthorID)
 )
 /******************Genres table************************/
 create table Genres (
 	GenreID int
-		primary key
 		identity(1,1)
 		not null,
 	GenreName nvarchar(100)
 		not null,
 	GenreDescription nvarchar(500)
+
+	constraint pk_Genres primary key (GenreID)
 )
 /******************GenresBooks table*******************/
 create table GenresBooks (
 	GenreBookID int
-		primary key
 		identity(1,1)
 		not null,
 	GenreID int
-		foreign key
-			references Genres(GenreID)
 		not null,
 	BookID int
-		foreign key
-			references Books(BookID)
 		not null
+
+	constraint pk_GenresBooks primary key (GenreBookID),
+	constraint fk_GenresBooks_Genres foreign key (GenreID) references Genres (GenreID),
+	constraint fk_GenresBooks_Books foreign key (BookID) references Books (BookID)
 )
 
 CREATE TABLE States (
-	StateID int IDENTITY(1,1) NOT NULL,
-	StateAbbreviation varchar(5) NOT NULL,
-	StateName varchar(100) NOT NULL
+	StateID int 
+		IDENTITY(1,1) 
+		NOT NULL,
+	StateAbbreviation varchar(5) 
+		NOT NULL,
+	StateName varchar(100) 
+		NOT NULL
 
 	CONSTRAINT pk_States PRIMARY KEY (StateID)
 	);

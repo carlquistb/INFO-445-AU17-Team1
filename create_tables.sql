@@ -191,26 +191,40 @@ CREATE TABLE Locations (
 	CONSTRAINT fk_Locations_Cities FOREIGN KEY (CityID) REFERENCES Cities (CityID),
 	CONSTRAINT fk_Locations_Retailers FOREIGN KEY (RetailerID) REFERENCES Retailers (RetailerID)
 	);
-/******************BooksLocations*************************/
-CREATE TABLE BooksLocations (
-	BookLocationID int IDENTITY(1,1) NOT NULL,
-	BookID int NOT NULL,
-	LocationID int NOT NULL
+/******************RetailersLocations*********************/
+create table RetailersLocations (
+	RetailerLocationID int
+		identity(1,1)
+		not null,
+	RetailerID int
+		not null,
+	LocationID int
+		not null
 
-	CONSTRAINT pk_BookLocation PRIMARY KEY (BookLocationID),
-	CONSTRAINT fk_BookLocation_Books FOREIGN KEY (BookID) REFERENCES Books (BookID),
-	CONSTRAINT fk_BookLocation_Location FOREIGN KEY (LocationID) REFERENCES Locations (LocationID)
+	constraint pk_RetailersLocations primary key (RetailerLocationID),
+	constraint fk_RetailersLocations_Retailers foreign key (RetailerID) references Retailers(RetailerID),
+	constraint fk_RetailersLocations_Locations foreign key (LocationID) references Locations(LocationID)
+	);
+/******************BooksRetailersLocations*************************/
+CREATE TABLE BooksRetailersLocations (
+	BookRetailerLocationID int IDENTITY(1,1) NOT NULL,
+	BookID int NOT NULL,
+	RetailerLocationID int NOT NULL
+
+	CONSTRAINT pk_BooksRetailersLocations PRIMARY KEY (BookRetailerLocationID),
+	CONSTRAINT fk_BooksRetailersLocations_Books FOREIGN KEY (BookID) REFERENCES Books (BookID),
+	CONSTRAINT fk_BooksRetailersLocations_RetailersLocations FOREIGN KEY (RetailerLocationID) REFERENCES RetailersLocations (RetailerLocationID)
 	);
 /******************DailySalesData table*******************/
 CREATE TABLE DailySalesData (
 	DailySalesID int IDENTITY(1,1) NOT NULL,
-	BookLocationID int NOT NULL,
+	BookRetailerLocationID int NOT NULL,
 	UnitsSold int NOT NULL,
 	DollarsSold money NOT NULL,
 	UtcDate date NOT NULL
 
 	CONSTRAINT pk_DailySalesData PRIMARY KEY (DailySalesID),
-	CONSTRAINT fk_DailySalesData_BookLocation FOREIGN KEY (BookLocationID) REFERENCES BookLocation (BookLocationID)
+	CONSTRAINT fk_DailySalesData_BooksRetailersLocations FOREIGN KEY (BookRetailerLocationID) REFERENCES BooksRetailersLocations (BookRetailerLocationID)
 	);
 /******************Promos table***************************/
 CREATE TABLE Promos (

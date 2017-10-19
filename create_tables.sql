@@ -243,8 +243,8 @@ CREATE TABLE BooksPromos (
 	BookID int NOT NULL,
 	PromoID int NOT NULL
 
-	CONSTRAINT pk_BookPromos PRIMARY KEY (BookPromoID),
-	CONSTRAINT fk_BookPromos_Books FOREIGN KEY (BookID) REFERENCES Books (BookID),
+	CONSTRAINT pk_BooksPromos PRIMARY KEY (BookPromoID),
+	CONSTRAINT fk_BooksPromos_Books FOREIGN KEY (BookID) REFERENCES Books (BookID),
 	CONSTRAINT fk_BookPromos_Promos FOREIGN KEY (PromoID) REFERENCES Promos (PromoID)
 	);
 /******************Expenses table*************************/
@@ -255,7 +255,7 @@ CREATE TABLE Expenses (
 	BookPromoID int  NOT NULL
 
 	CONSTRAINT pk_Expense PRIMARY KEY (ExpenseID),
-	CONSTRAINT fk_Expense_BookPromo FOREIGN KEY (BookPromoID) REFERENCES BookPromos (BookPromoID)
+	CONSTRAINT fk_Expense_BooksPromos FOREIGN KEY (BookPromoID) REFERENCES BooksPromos (BookPromoID)
 	);
 /******************Categories table***********************/
 CREATE TABLE Categories (

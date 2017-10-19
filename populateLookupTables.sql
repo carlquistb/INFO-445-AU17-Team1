@@ -13,3 +13,12 @@ lookup tables:
 	PromoCategories
 */
 
+use g1_BookPromotionsDB
+go
+
+-- steal state data from UNIVERSITY.
+insert into States 
+	select distinct
+		right(StudentPermState,2),
+		substring(StudentPermState,0,len(StudentPermState)-3)
+	from [UNIVERSITY].[dbo].[tblSTUDENT]
